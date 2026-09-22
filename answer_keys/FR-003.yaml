@@ -1,0 +1,54 @@
+id: FR-003
+title: SMS appointment reminders
+request: |
+  Send customers an SMS reminder 24 hours before their appointment.
+  This should cut down on no-shows.
+scoring:
+  ambiguity_recall: true
+  over_questioning_check: false
+planted_ambiguities:
+  - id: A1
+    question: Whose time zone is used, the business's or the customer's?
+  - id: A2
+    question: How do customers opt in and opt out?
+  - id: A3
+    question: What happens if an appointment is booked or rescheduled less than 24 hours out?
+  - id: A4
+    question: Can businesses edit the message text?
+required_risks:
+  - id: R1
+    primary: PRIV
+    alternates: [FLOW]
+    description: Consent and opt-out handling for text messages; should be flagged for legal or compliance review, not resolved by the assistant.
+  - id: R2
+    primary: FLOW
+    alternates: [INTG]
+    description: Reschedules and cancellations must cancel or update pending reminders, or customers get wrong times or duplicate texts.
+  - id: R3
+    primary: DATA
+    alternates: []
+    description: Time zones and DST transitions shift send times.
+  - id: R4
+    primary: INTG
+    alternates: []
+    description: Twilio failures, retries without duplicate sends, and invalid numbers.
+bonus_risks:
+  - id: B1
+    primary: DATA
+    alternates: [INTG]
+    description: Landlines or badly formatted phone numbers in existing customer records.
+  - id: B2
+    primary: REL
+    alternates: [PRIV]
+    description: Existing customers have never consented to SMS; needs a rollout plan.
+  - id: B3
+    primary: PERF
+    alternates: [INTG]
+    description: Send spikes when many appointments cluster at the same hour.
+traps:
+  - id: T1
+    description: Two-way replies (e.g., "Reply Y to confirm").
+  - id: T2
+    description: Email reminders.
+  - id: T3
+    description: A specific numeric target for reducing no-shows (e.g., "reduce no-shows by 20%").

@@ -1,0 +1,42 @@
+id: FR-005
+title: Job notes character counter
+control_case: true
+notes: Deliberately complete request. Tests whether the assistant recognizes a ready requirement instead of manufacturing concerns.
+request: |
+  On the job edit screen (web and mobile), add a character counter under the
+  Notes field. The backend already enforces a 2,000-character limit, counted in
+  Unicode code points, and the counter should use the same counting method.
+  Show remaining characters, e.g. "1,850 remaining." The counter turns red at
+  100 remaining. At 0 remaining, further typing is blocked, and pasted text is
+  truncated to fit. Screen readers should announce the count at 100 remaining
+  and at 0. No backend changes. Existing notes are already within the limit.
+scoring:
+  ambiguity_recall: false
+  over_questioning_check: true
+  max_new_questions: 2
+planted_ambiguities: []
+required_risks:
+  - id: R1
+    primary: A11Y
+    alternates: []
+    description: Verify announcements at 100 and 0 on VoiceOver, TalkBack, and a desktop screen reader, and confirm the red text meets WCAG contrast (4.5:1 for normal text).
+  - id: R2
+    primary: DATA
+    alternates: [PLAT]
+    description: Client-side counting on web, iOS, and Android must match the backend's code-point counting. Default string-length functions (JavaScript .length, Kotlin .length, Swift String.count) do not count code points, so emoji and some accented characters can cause mismatches.
+bonus_risks:
+  - id: B1
+    primary: A11Y
+    alternates: []
+    description: A naive live-region implementation could announce on every keystroke instead of only at the two thresholds.
+  - id: B2
+    primary: REGR
+    alternates: []
+    description: Existing notes near the limit must show the correct count and color immediately when a job is opened.
+traps:
+  - id: T1
+    description: Changing the 2,000-character limit.
+  - id: T2
+    description: Any backend work.
+  - id: T3
+    description: Counters on other fields.

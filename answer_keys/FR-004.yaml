@@ -1,0 +1,54 @@
+id: FR-004
+title: QuickBooks invoice sync
+request: |
+  Owners want invoices to show up in QuickBooks automatically so they don't
+  have to enter them twice.
+scoring:
+  ambiguity_recall: true
+  over_questioning_check: false
+planted_ambiguities:
+  - id: A1
+    question: Is the sync one-way (Tallowbrook to QuickBooks) or two-way?
+  - id: A2
+    question: What triggers a sync (invoice creation, sending, payment)?
+  - id: A3
+    question: How are customers matched when one already exists in QuickBooks?
+  - id: A4
+    question: What happens when an invoice is edited or voided after syncing?
+required_risks:
+  - id: R1
+    primary: INTG
+    alternates: []
+    description: Expired or revoked QuickBooks authorization needs visible failure handling, not silent drops.
+  - id: R2
+    primary: DATA
+    alternates: [INTG]
+    description: Duplicate customers or invoices from matching failures.
+  - id: R3
+    primary: DATA
+    alternates: []
+    description: Tax and rounding mismatches between the two systems.
+  - id: R4
+    primary: FLOW
+    alternates: [INTG]
+    description: Edits and voids after sync cause the two systems to drift apart.
+bonus_risks:
+  - id: B1
+    primary: REL
+    alternates: [DATA]
+    description: Backfilling historical invoices is a one-time migration with its own risk.
+  - id: B2
+    primary: PERM
+    alternates: []
+    description: Which roles can connect or disconnect the company's accounting account.
+  - id: B3
+    primary: INTG
+    alternates: [PERF]
+    description: QuickBooks API rate limits for high-volume businesses.
+traps:
+  - id: T1
+    description: Real-time sync.
+  - id: T2
+    description: Payment sync as a requirement (only invoices were requested).
+  - id: T3
+    description: QuickBooks Desktop support (the product overview specifies QuickBooks Online).

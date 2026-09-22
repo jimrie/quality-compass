@@ -1,0 +1,50 @@
+id: FR-002
+title: Complete jobs from mobile
+request: |
+  Technicians should be able to mark a job complete from the mobile app,
+  attach photos, and get the customer's signature.
+scoring:
+  ambiguity_recall: true
+  over_questioning_check: false
+planted_ambiguities:
+  - id: A1
+    question: What happens with no connectivity (basements, rural sites)?
+  - id: A2
+    question: Are photos and signature required or optional to complete a job?
+  - id: A3
+    question: Can a completed job be reopened, and by whom?
+  - id: A4
+    question: Who is notified on completion (dispatcher, customer, owner)?
+required_risks:
+  - id: R1
+    primary: PLAT
+    alternates: [FLOW]
+    description: Offline completion needs a sync strategy and conflict handling (e.g., dispatcher edits the job while the technician is offline).
+  - id: R2
+    primary: FLOW
+    alternates: []
+    description: Completion may unlock downstream steps (invoicing, reporting); reversal of completion must be handled.
+  - id: R3
+    primary: DATA
+    alternates: [PERF, PLAT]
+    description: Photo size and count limits, and uploads that fail partway through.
+bonus_risks:
+  - id: B1
+    primary: PRIV
+    alternates: []
+    description: Photos taken inside homes may capture people or personal items; affects retention and customer-portal visibility.
+  - id: B2
+    primary: A11Y
+    alternates: []
+    description: Finger signature capture excludes some customers; an alternative may be needed.
+  - id: B3
+    primary: PLAT
+    alternates: []
+    description: Camera or photo-library permissions denied on iOS or Android.
+traps:
+  - id: T1
+    description: Completion automatically creates an invoice.
+  - id: T2
+    description: GPS or location verification of completion.
+  - id: T3
+    description: A minimum number of photos.

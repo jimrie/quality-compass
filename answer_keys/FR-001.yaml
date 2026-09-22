@@ -1,0 +1,46 @@
+id: FR-001
+title: Customer list export
+request: |
+  Customers keep asking if they can get their client list out of Tallowbrook.
+  Let's add an Export to CSV button on the Customers page.
+scoring:
+  ambiguity_recall: true
+  over_questioning_check: false
+planted_ambiguities:
+  - id: A1
+    question: Which roles can export (Owner, Dispatcher, Technician)?
+  - id: A2
+    question: Which fields are included? Does the file contain notes, payment status, or other sensitive data?
+  - id: A3
+    question: Does it export all customers or only the current filtered or searched view?
+  - id: A4
+    question: Does the CSV need to open cleanly in Excel (encoding, leading zeros in phone numbers or ZIP codes)?
+required_risks:
+  - id: R1
+    primary: PRIV
+    alternates: [PERM]
+    description: Bulk export of customer PII needs access restrictions and ideally an audit log entry.
+  - id: R2
+    primary: PERM
+    alternates: [PRIV]
+    description: Export access must be defined per role; broad access (e.g., technicians) would expose the entire customer base.
+  - id: R3
+    primary: DATA
+    alternates: []
+    description: Commas, line breaks, quotes, and Unicode characters in names or addresses can break CSV formatting.
+bonus_risks:
+  - id: B1
+    primary: PERF
+    alternates: []
+    description: Large accounts (tens of thousands of customers) could time out.
+  - id: B2
+    primary: PRIV
+    alternates: [DATA]
+    description: CSV formula injection; values beginning with =, +, -, or @ can be evaluated as formulas when opened in Excel.
+traps:
+  - id: T1
+    description: Scheduled or automatic exports.
+  - id: T2
+    description: A specific row limit.
+  - id: T3
+    description: Export restricted to Owners only (should be asked, not assumed).
